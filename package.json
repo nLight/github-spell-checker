@@ -1,0 +1,23 @@
+{
+  "name": "github-spell-checker",
+  "version": "0.1.0",
+  "description": "Spell Checker Github Webhook",
+  "main": "server.js",
+  "dependencies": {
+    "github-webhook-handler": "^1.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/nLight/github-spell-checker.git"
+  },
+  "author": "Dmitriy Rozhkov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nLight/github-spell-checker/issues"
+  },
+  "homepage": "https://github.com/nLight/github-spell-checker#readme"
+}
