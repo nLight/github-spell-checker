@@ -4,10 +4,13 @@
   "description": "Spell Checker Github Webhook",
   "main": "server.js",
   "dependencies": {
+    "@octokit/graphql": "^4.5.1",
+    "dotenv": "^8.2.0",
     "github-webhook-handler": "^1.0.0"
   },
   "devDependencies": {},
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

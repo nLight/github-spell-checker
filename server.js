@@ -1,7 +1,11 @@
 const http = require("http");
+const { graphql } = require("@octokit/graphql");
 const createHandler = require("github-webhook-handler");
+
+require("dotenv").config();
+
 const handler = createHandler({
-  path: "/spellchecker-webhook",
+  path: process.env.WEBHOOK_PATH || "/spellchecker-webhook",
   secret: process.env.GITHUB_SECRET,
 });
 
@@ -18,12 +22,15 @@ handler.on("error", function (err) {
   console.error("Error:", err.message);
 });
 
-handler.on("push", function (event) {
-  console.log(
-    "Received a push event for %s to %s",
-    event.payload.repository.name,
-    event.payload.ref
-  );
+handler.on("ping", function (event) {
+  console.log("ping", event.zen);
+});
+
+handler.on("push", async function (event) {
+  const pr = event.payload.commits[0].sha;
+  const { commit } = await graphql(`{
+
+  }`);
 });
 
 handler.on("issues", function (event) {
