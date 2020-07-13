@@ -1,44 +1,39 @@
 const http = require("http");
-const { graphql } = require("@octokit/graphql");
-const createHandler = require("github-webhook-handler");
+const checkSpelling = require("./src/checkSpelling");
+const { Webhooks } = require("@octokit/webhooks");
 
-require("dotenv").config();
+// DEV Setup
+// GOTO https://smee.io and start a new channel
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+  const EventSource = require("eventsource");
 
-const handler = createHandler({
-  path: process.env.WEBHOOK_PATH || "/spellchecker-webhook",
+  const source = new EventSource(process.env.WEBHOOK_PROXY_URL);
+  source.onmessage = (event) => {
+    const webhookEvent = JSON.parse(event.data);
+    webhooks
+      .verifyAndReceive({
+        id: webhookEvent["x-request-id"],
+        name: webhookEvent["x-github-event"],
+        signature: webhookEvent["x-hub-signature"],
+        payload: webhookEvent.body,
+      })
+      .catch(console.error);
+  };
+}
+
+const webhooks = new Webhooks({
+  path: process.env.WEBHOOK_PATH || "/webhook",
   secret: process.env.GITHUB_SECRET,
 });
 
-http
-  .createServer(function (req, res) {
-    handler(req, res, function (err) {
-      res.statusCode = 404;
-      res.end("no such location");
-    });
-  })
-  .listen(process.env.PORT);
-
-handler.on("error", function (err) {
-  console.error("Error:", err.message);
+webhooks.on("ping", function ({ payload }) {
+  console.log("Received a ping even", payload);
+});
+webhooks.on("error", (error) => {
+  console.log(`Error occured in "${error.event.name} handler: ${error.stack}"`);
 });
 
-handler.on("ping", function (event) {
-  console.log("ping", event.zen);
-});
+webhooks.on("push", checkSpelling);
 
-handler.on("push", async function (event) {
-  const pr = event.payload.commits[0].sha;
-  const { commit } = await graphql(`{
-
-  }`);
-});
-
-handler.on("issues", function (event) {
-  console.log(
-    "Received an issue event for %s action=%s: #%d %s",
-    event.payload.repository.name,
-    event.payload.action,
-    event.payload.issue.number,
-    event.payload.issue.title
-  );
-});
+http.createServer(webhooks.middleware).listen(process.env.PORT);

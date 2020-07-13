@@ -3,12 +3,18 @@
   "version": "0.1.0",
   "description": "Spell Checker Github Webhook",
   "main": "server.js",
+  "engines": {
+    "node": "^14.0.0"
+  },
   "dependencies": {
     "@octokit/graphql": "^4.5.1",
-    "dotenv": "^8.2.0",
-    "github-webhook-handler": "^1.0.0"
+    "@octokit/webhooks": "^7.6.4",
+    "diff": "^4.0.2",
+    "dotenv": "^8.2.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eventsource": "^1.0.7"
+  },
   "scripts": {
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
