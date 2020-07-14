@@ -1,0 +1,18 @@
+diff --git a/javascript.js b/javascript.js
+new file mode 100644
+index 0000000..bf523fd
+--- /dev/null
++++ b/javascript.js
+@@ -0,0 +1,3 @@
++// Test javascript file
++console.log("Test");
++
+diff --git a/test.md b/test.md
+index ab54c15..09cef9c 100644
+--- a/test.md
++++ b/test.md
+@@ -1,2 +1,4 @@
+  # Test document
+
++With a tpyo
++

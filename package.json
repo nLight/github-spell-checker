@@ -8,16 +8,21 @@
   },
   "dependencies": {
     "@octokit/graphql": "^4.5.1",
+    "@octokit/rest": "^18.0.0",
     "@octokit/webhooks": "^7.6.4",
+    "cspell-lib": "^4.1.29",
+    "debug": "^4.1.1",
     "diff": "^4.0.2",
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "node-fetch": "^2.6.0"
   },
   "devDependencies": {
-    "eventsource": "^1.0.7"
+    "eventsource": "^1.0.7",
+    "mocha": "^8.0.1"
   },
   "scripts": {
     "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
