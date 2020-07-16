@@ -19,9 +19,12 @@ const {
 module.exports.commitsWithDistinctAdditions = (commits) =>
   commits
     // Some of the commits Github have already seen, we need only distinct commits
-    .filter(({ distinct }) => distinct)
+    .filter(({ distinct = true }) => distinct)
     // Take only commits with added or modified files
-    .filter(({ added, modified }) => added.length > 0 || modified.length > 0);
+    .filter(
+      ({ added, modified }) =>
+        !(added && modified) || added.length > 0 || modified.length > 0
+    );
 
 /**
  * Get associated PR by the commit sha
