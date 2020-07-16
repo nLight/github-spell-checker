@@ -1,5 +1,4 @@
 const http = require("http");
-const checkSpelling = require("./src/checkSpelling");
 const { Webhooks } = require("@octokit/webhooks");
 
 // DEV Setup
@@ -22,6 +21,10 @@ if (process.env.NODE_ENV !== "production") {
   };
 }
 
+const checkSpelling = require("./src/checkSpelling");
+const checkPr = require("./src/checkPr");
+const fetchCommits = require("./src/fetchCommits");
+
 const webhooks = new Webhooks({
   path: process.env.WEBHOOK_PATH || "/webhook",
   secret: process.env.GITHUB_SECRET,
@@ -31,9 +34,14 @@ webhooks.on("ping", function ({ payload }) {
   console.log("Received a ping even", payload);
 });
 webhooks.on("error", (error) => {
-  console.log(`Error occured in "${error.event.name} handler: ${error.stack}"`);
+  console.log(
+    `Error occurred in "${error.event.name} handler: ${error.stack}"`
+  );
 });
 
-webhooks.on("push", checkSpelling);
+webhooks.on("push", (event) => checkPr(event).then(checkSpelling));
+webhooks.on("pull_request.opened", (event) =>
+  fetchCommits(event).then(checkSpelling)
+);
 
 http.createServer(webhooks.middleware).listen(process.env.PORT);
