@@ -16,3 +16,8 @@
 ## commands
 
 1. `/add` to add the suggested word to the dictionary
+
+## Credits
+
+Inspired by https://github.com/check-spelling/check-spelling but it has no tests, no comments and written in Perl. 
+Also Github Actions are not available for some accounts.
