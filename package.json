@@ -7,6 +7,8 @@
     "node": "^14.0.0"
   },
   "dependencies": {
+    "@actions/core": "^1.2.4",
+    "@actions/github": "^4.0.0",
     "@octokit/graphql": "^4.5.1",
     "@octokit/rest": "^18.0.0",
     "@octokit/webhooks": "^7.6.4",
