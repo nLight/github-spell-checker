@@ -2,22 +2,29 @@
 
 ## Config
 
-1. Dictionary repo
-2. Files to observe. Default to markdown
+1. Setup a `push/pull_request` webhook handler OR add [the Github Action](https://github.com/nLight/github-spell-checker/blob/master/.github/workflows/spell-checker.yml)
+2. Optionally add a [cspell config file](https://github.com/streetsidesoftware/cspell/tree/master/packages/cspell#customization) to your repo. It won't resolve dictionary definitions for now. You can add `words` and `ignoredWords` though.
+3. That's it for now
 
-## Workflow
+## How it works
 
-1. Expose the webhook handler
-2. Fetch PR changes
-3. Filter the files to check
-4. Check the spelling
-5. Suggest the changes as the PR comments
+1. Loads the config files
+2. Fetches PR changes (pattch files)
+3. Filters added/modifyed lines
+4. Checks the spelling
+5. Suggests the changes as the PR comments
+6. **DOES NOT** Remove own stale comments for now
 
-## commands
+## Roadmap
 
-1. `/add` to add the suggested word to the dictionary
+1. Allow for external config files
+2. Support local dictionary definitions
+3. Support external dictionary definitions
+4. Remove stale comments
+5. Support Approve / Request Changes workflow
 
 ## Credits
 
-Inspired by https://github.com/check-spelling/check-spelling but it has no tests, no comments and written in Perl. 
-Also Github Actions are not available for some accounts.
+Inspired by https://github.com/check-spelling/check-spelling.
+
+Unfortunately the project has no tests, no comments and written in a mixture of languages. Also Github Actions are not available for some accounts.
