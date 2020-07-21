@@ -1,8 +1,15 @@
 const Diff = require("diff");
 const fetch = require("node-fetch");
-const graphqlWithAuth = require("./graphql");
-const { checkText } = require("cspell-lib");
+const {
+  checkText,
+  mergeSettings,
+  getDefaultSettings,
+  getGlobalSettings,
+  getLanguagesForExt,
+  constructSettingsForText,
+} = require("cspell-lib");
 
+const graphqlWithAuth = require("./graphql");
 /**
  * Return distinct commits that contain addtions and modifications
  * Push event has some additional info on commits that we use here.
@@ -174,11 +181,45 @@ module.exports.composeFeedback = (lines) =>
     path: line.fileName,
   }));
 
+module.exports.getConfig = async (owner, repoName) => {
+  const cspellSettings = [
+    // Default cSpell config locations
+    `https://raw.githubusercontent.com/${owner}/${repoName}/cspell.json`,
+    `https://raw.githubusercontent.com/${owner}/${repoName}/cSpell.json`,
+    `https://raw.githubusercontent.com/${owner}/${repoName}/.cspell.json`,
+  ];
+
+  const configFiles = await Promise.all(
+    cspellSettings.map((url) =>
+      fetch(url, {
+        headers: {
+          authorization: `token ${process.env.GITHUB_TOKEN}`,
+        },
+      })
+        .then((response) =>
+          response.status === 200 ? response.text() : Promise.resolve("{}")
+        )
+        .then((jsonString) => JSON.parse(jsonString))
+    )
+  );
+
+  const settings = mergeSettings(
+    getDefaultSettings(),
+    getGlobalSettings(),
+    ...configFiles
+  );
+  const languageIds = getLanguagesForExt("md");
+
+  return constructSettingsForText(settings, "", languageIds);
+};
+
 /**
  * Promise chain debug helper function
  * @param {*} cb
  */
-module.exports.tap = (cb) => (input) => {
+const tap = (cb) => (input) => {
   cb(input);
   return input;
 };
+
+module.exports.tap = tap;

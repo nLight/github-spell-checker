@@ -1,10 +1,4 @@
-const {
-  mergeSettings,
-  getDefaultSettings,
-  getGlobalSettings,
-  getLanguagesForExt,
-  constructSettingsForText,
-} = require("cspell-lib");
+const fetch = require("node-fetch");
 
 const {
   publishResponse,
@@ -12,6 +6,7 @@ const {
   transformChanges,
   checkSpelling,
   composeFeedback,
+  getConfig,
 } = require("./helper");
 
 // 1. Get the PR
@@ -26,9 +21,7 @@ module.exports = async function (input) {
 
   const { owner, repoName, commits, pullRequestId } = input;
 
-  const settings = mergeSettings(getDefaultSettings(), getGlobalSettings());
-  const languageIds = getLanguagesForExt("md");
-  const config = constructSettingsForText(settings, "", languageIds);
+  const config = await getConfig(owner, repoName);
 
   const comments = await fetchDiffs(owner, repoName, commits)
     .then(transformChanges)

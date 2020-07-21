@@ -19,8 +19,10 @@
     "node-fetch": "^2.6.0"
   },
   "devDependencies": {
+    "@types/jest": "^26.0.5",
     "eventsource": "^1.0.7",
     "fetch-mock": "^9.10.4",
+    "fetch-mock-jest": "^1.3.0",
     "jest": "^26.1.0"
   },
   "scripts": {

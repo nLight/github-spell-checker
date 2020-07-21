@@ -1,3 +1,7 @@
+jest.mock("node-fetch", () => require("fetch-mock-jest").sandbox());
+
+const fetchMock = require("node-fetch");
+
 const fs = require("fs");
 const assert = require("assert");
 const Diff = require("diff");
@@ -14,6 +18,7 @@ const {
   commitsWithDistinctAdditions,
   transformChanges,
   checkSpelling,
+  getConfig,
 } = require("../helper");
 
 describe("commitsWithDistinctAdditions", () => {
@@ -142,5 +147,60 @@ describe("checkSpelling", () => {
       ],
       result
     );
+  });
+});
+
+describe("getConfig", () => {
+  const owner = "mock-owner";
+  const repoName = "mock-repo";
+
+  afterEach(() => {
+    fetchMock.reset();
+  });
+
+  describe("with one of the files present", () => {
+    beforeEach(() => {
+      fetchMock.mock(
+        `https://raw.githubusercontent.com/${owner}/${repoName}/cspell.json`,
+        JSON.stringify({ words: ["test"] })
+      );
+      fetchMock.mock(
+        `https://raw.githubusercontent.com/${owner}/${repoName}/cSpell.json`,
+        404
+      );
+      fetchMock.mock(
+        `https://raw.githubusercontent.com/${owner}/${repoName}/.cspell.json`,
+        404
+      );
+    });
+
+    it("fetches config files", async () => {
+      const result = await getConfig(owner, repoName);
+
+      assert.deepEqual(result.words, ["test"]);
+    });
+  });
+
+  describe("with all the files missing", () => {
+    beforeEach(() => {
+      fetchMock.mock(
+        `https://raw.githubusercontent.com/${owner}/${repoName}/cspell.json`,
+        404
+      );
+      fetchMock.mock(
+        `https://raw.githubusercontent.com/${owner}/${repoName}/cSpell.json`,
+        404
+      );
+      fetchMock.mock(
+        `https://raw.githubusercontent.com/${owner}/${repoName}/.cspell.json`,
+        404
+      );
+    });
+
+    it("gracefully skips missing default files", async () => {
+      const result = await getConfig(owner, repoName);
+
+      assert.deepEqual(result.words, []);
+    });
   });
 });
