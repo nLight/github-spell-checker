@@ -1,3 +1,4 @@
+const debug = require("debug");
 const Diff = require("diff");
 const fetch = require("node-fetch");
 const {
@@ -184,9 +185,9 @@ module.exports.composeFeedback = (lines) =>
 module.exports.getConfig = async (owner, repoName) => {
   const cspellSettings = [
     // Default cSpell config locations
-    `https://raw.githubusercontent.com/${owner}/${repoName}/cspell.json`,
-    `https://raw.githubusercontent.com/${owner}/${repoName}/cSpell.json`,
-    `https://raw.githubusercontent.com/${owner}/${repoName}/.cspell.json`,
+    `https://raw.githubusercontent.com/${owner}/${repoName}/master/cspell.json`,
+    `https://raw.githubusercontent.com/${owner}/${repoName}/master/cSpell.json`,
+    `https://raw.githubusercontent.com/${owner}/${repoName}/master/.cspell.json`,
   ];
 
   const configFiles = await Promise.all(
@@ -196,12 +197,15 @@ module.exports.getConfig = async (owner, repoName) => {
           authorization: `token ${process.env.GITHUB_TOKEN}`,
         },
       })
+        .then(tap((res) => console.log(res)))
         .then((response) =>
           response.status === 200 ? response.text() : Promise.resolve("{}")
         )
         .then((jsonString) => JSON.parse(jsonString))
     )
   );
+
+  debug("getConfig")(configFiles);
 
   const settings = mergeSettings(
     getDefaultSettings(),

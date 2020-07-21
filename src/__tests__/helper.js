@@ -161,15 +161,15 @@ describe("getConfig", () => {
   describe("with one of the files present", () => {
     beforeEach(() => {
       fetchMock.mock(
-        `https://raw.githubusercontent.com/${owner}/${repoName}/cspell.json`,
+        `https://raw.githubusercontent.com/${owner}/${repoName}/master/cspell.json`,
         JSON.stringify({ words: ["test"] })
       );
       fetchMock.mock(
-        `https://raw.githubusercontent.com/${owner}/${repoName}/cSpell.json`,
+        `https://raw.githubusercontent.com/${owner}/${repoName}/master/cSpell.json`,
         404
       );
       fetchMock.mock(
-        `https://raw.githubusercontent.com/${owner}/${repoName}/.cspell.json`,
+        `https://raw.githubusercontent.com/${owner}/${repoName}/master/.cspell.json`,
         404
       );
     });
@@ -184,15 +184,15 @@ describe("getConfig", () => {
   describe("with all the files missing", () => {
     beforeEach(() => {
       fetchMock.mock(
-        `https://raw.githubusercontent.com/${owner}/${repoName}/cspell.json`,
+        `https://raw.githubusercontent.com/${owner}/${repoName}/master/cspell.json`,
         404
       );
       fetchMock.mock(
-        `https://raw.githubusercontent.com/${owner}/${repoName}/cSpell.json`,
+        `https://raw.githubusercontent.com/${owner}/${repoName}/master/cSpell.json`,
         404
       );
       fetchMock.mock(
-        `https://raw.githubusercontent.com/${owner}/${repoName}/.cspell.json`,
+        `https://raw.githubusercontent.com/${owner}/${repoName}/master/.cspell.json`,
         404
       );
     });
