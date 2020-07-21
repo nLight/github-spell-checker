@@ -1,4 +1,12 @@
 const {
+  mergeSettings,
+  getDefaultSettings,
+  getGlobalSettings,
+  getLanguagesForExt,
+  constructSettingsForText,
+} = require("cspell-lib");
+
+const {
   publishResponse,
   fetchDiffs,
   transformChanges,
@@ -18,13 +26,17 @@ module.exports = async function (input) {
 
   const { owner, repoName, commits, pullRequestId } = input;
 
+  const settings = mergeSettings(getDefaultSettings(), getGlobalSettings());
+  const languageIds = getLanguagesForExt("md");
+  const config = constructSettingsForText(settings, "", languageIds);
+
   const comments = await fetchDiffs(owner, repoName, commits)
     .then(transformChanges)
     // .then(fetchFiles)
     // Currently we check spelling line by line which is inneficient and doesn't
     // allow accounting for the programming language syntax.
     // We could fetch modified files, check them and then map the lines back to the diff
-    .then(checkSpelling)
+    .then(checkSpelling(config))
     .then(composeFeedback)
     .catch((error) => console.error(error));
 

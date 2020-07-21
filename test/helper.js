@@ -1,6 +1,15 @@
 const fs = require("fs");
 const assert = require("assert");
 const Diff = require("diff");
+
+const {
+  mergeSettings,
+  getDefaultSettings,
+  getGlobalSettings,
+  getLanguagesForExt,
+  constructSettingsForText,
+} = require("cspell-lib");
+
 const {
   commitsWithDistinctAdditions,
   transformChanges,
@@ -114,8 +123,14 @@ describe("checkSpelling", () => {
       { fileName: "new.md", diffPosition: 1, text: "# New document" },
       { fileName: "new.md", diffPosition: 3, text: "with a tpoy" },
     ];
-    const result = await checkSpelling(input);
-    console.log(result);
+
+    const settings = mergeSettings(getDefaultSettings(), getGlobalSettings());
+    const languageIds = getLanguagesForExt("md");
+    const config = constructSettingsForText(settings, "", languageIds);
+    const checkSpellingWithConfig = checkSpelling(config);
+
+    const result = await checkSpellingWithConfig(input);
+
     assert.deepEqual(
       [
         {

@@ -1,14 +1,7 @@
 const Diff = require("diff");
 const fetch = require("node-fetch");
 const graphqlWithAuth = require("./graphql");
-const {
-  checkText,
-  mergeSettings,
-  getDefaultSettings,
-  getGlobalSettings,
-  getLanguagesForExt,
-  constructSettingsForText,
-} = require("cspell-lib");
+const { checkText } = require("cspell-lib");
 
 /**
  * Return distinct commits that contain addtions and modifications
@@ -153,13 +146,9 @@ module.exports.transformChanges = (diffs) => {
 /**
  * Check spelling line by line. Hardcoded language is markdown and
  * the only extension we check is `md`
- * @param {*} lines
+ * @param {*} config
  */
-module.exports.checkSpelling = (lines) => {
-  const settings = mergeSettings(getDefaultSettings(), getGlobalSettings());
-  const languageIds = getLanguagesForExt("md");
-  const config = constructSettingsForText(settings, "", languageIds);
-
+module.exports.checkSpelling = (config) => (lines) => {
   return Promise.all(
     lines.map((line) =>
       checkText(line.text, config).then(({ items }) =>
