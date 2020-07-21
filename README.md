@@ -1,4 +1,4 @@
-# Github PRs spell checker ![Node.js CI](https://github.com/nLight/github-spell-checker/workflows/Node.js%20CI/badge.svg?branch=master)
+# Github PRs spell checker ![CI](https://github.com/nLight/github-spell-checker/workflows/Node.js%20CI/badge.svg?branch=master)
 
 ## Config
 
