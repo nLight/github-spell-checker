@@ -20,11 +20,12 @@
   },
   "devDependencies": {
     "eventsource": "^1.0.7",
-    "mocha": "^8.0.1"
+    "fetch-mock": "^9.10.4",
+    "jest": "^26.1.0"
   },
   "scripts": {
     "start": "node server.js",
-    "test": "mocha"
+    "test": "jest"
   },
   "repository": {
     "type": "git",

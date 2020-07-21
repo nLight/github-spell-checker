@@ -14,7 +14,7 @@ const {
   commitsWithDistinctAdditions,
   transformChanges,
   checkSpelling,
-} = require("../src/helper");
+} = require("../helper");
 
 describe("commitsWithDistinctAdditions", () => {
   describe("with commits with distinct additions", () => {
