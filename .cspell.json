@@ -1,0 +1,10 @@
+{
+  "version": "0.1",
+  "id": "github-spell-checker-config",
+  "name": "Github Spell Checker Config",
+  "language": "en",
+  "words": [],
+  "allowCompoundWords": false,
+  "dictionaryDefinitions": [],
+  "ignoreWords": []
+}
